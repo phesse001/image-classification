@@ -19,7 +19,7 @@ transform = transforms.Compose(
 [transforms.ToTensor(),
 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-testset = torchvision.datasets.CIFAR10(root='./data_cifar', train=False,
+testset = torchvision.datasets.CIFAR10(root='./data/data_cifar_test', train=False,
                                            download=False, transform=transform)
 
 testloader = torch.utils.data.DataLoader(testset, batch_size=4,

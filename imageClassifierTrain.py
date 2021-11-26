@@ -1,6 +1,7 @@
 import torch
 import torchvision
 import torchvision.transforms as transforms
+import torch.optim as optim
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -31,13 +32,9 @@ class Net(nn.Module):
         self.fc3 = nn.Linear(84, 10)
 
     def forward(self, x):
-        print(f"Original [{x.size()}]: {x}")
         x = self.pool(F.relu(self.conv1(x)))
-        print(f"After first convolution [{x.size}]: {x}")
         x = self.pool(F.relu(self.conv2(x)))
-        print(f"After convolution and pool [{x.size}]: {x}")
         x = x.view(-1, 16 * 5 * 5)
-        print(f"After view [{x.size}]: {x}")
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
@@ -52,9 +49,6 @@ def imgshow(img):
     plt.imshow(np.transpose(npimg, (1,2,0)))
     plt.show()
 
-
-# Get Data
-
 def main():
     print("Number of threads " + str(torch.get_num_threads()))
     transform = transforms.Compose(
@@ -64,15 +58,12 @@ def main():
     classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-    # print(transform) -> Compose(ToTensor(), Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)))
-
-    trainset = torchvision.datasets.CIFAR10(root='./data_cifar', train=True,
+    trainset = torchvision.datasets.CIFAR10(root='./data/data_cifar_train', train=True,
                                             download=False, transform=transform)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=5,
                                               shuffle=True, num_workers=4)
     dataiter = iter(trainloader)
     images,labels = dataiter.next()
-    print(images)
 
     imgshow(torchvision.utils.make_grid(images))
     print(' '.join('%5s' % classes[labels[j]] for j in range(5)))
@@ -80,15 +71,10 @@ def main():
     net = Net()
 
     # Define a loss function and optimizer
-
-    import torch.optim as optim
-
     criterion = nn.CrossEntropyLoss() #the loss function
-    #optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=.9) #updates parameters based off of current gradients
     optimizer = optim.Adam(net.parameters(), lr = 0.0001)
 
     # Train the nn
-
     for epoch in range(50):
         # loop over the dataset multiple times (twice)
         running_loss = 0
