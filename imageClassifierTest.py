@@ -12,6 +12,7 @@ classes = ('plane', 'car', 'bird', 'cat',
 
 net = Net()
 net.load_state_dict(torch.load(PATH))
+net.eval() # set dropout and batch normalization layers to evaluation mode before testing
 
 transform = transforms.Compose(
 [transforms.ToTensor(),
