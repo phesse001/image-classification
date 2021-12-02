@@ -50,8 +50,8 @@ def main():
     classes = ('plane', 'car', 'bird', 'cat',
            'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
-    trainset = torchvision.datasets.CIFAR10(root='./data/data_cifar_train', train=True,
-                                            download=False, transform=transform)
+    trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
+                                            download=True, transform=transform)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=4,
                                               shuffle=True, num_workers=4)
     dataiter = iter(trainloader)
