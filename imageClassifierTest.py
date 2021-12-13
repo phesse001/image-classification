@@ -49,7 +49,8 @@ with torch.no_grad():
         correct += (predicted == labels).sum().item()
 
 runtime = time.time() - start
-with open('runtime.txt', 'w') as f:
-    f.write(str(runtime))
+with open('results.txt', 'a') as f:
+    point = FLAGS.num_threads + ',' + str(runtime) + '\n'
+    f.write(point)
 #print('Accuracy of the network on the 10000 test images: %d %%' % (
 #    100 * correct / total))
