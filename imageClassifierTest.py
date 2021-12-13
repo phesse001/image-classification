@@ -4,6 +4,13 @@ import torchvision
 import torchvision.transforms as transforms
 import torch.nn as nn
 import torch.nn.functional as F
+import time
+from absl import flags
+
+FLAGS = flags.FLAGS
+
+flags.DEFINE_integer("num_threads", 1, "Number of threads to use.")
+torch.set_num_threads(FLAGS.num_threads)
 
 PATH = './cifar_net.pth'
 
@@ -27,9 +34,8 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=4,
 # test on testset
 correct = 0
 total = 0
-
 with torch.no_grad():
-
+    start = time.time()
     for data in testloader:
 
         images, labels = data
@@ -42,5 +48,8 @@ with torch.no_grad():
         
         correct += (predicted == labels).sum().item()
 
-print('Accuracy of the network on the 10000 test images: %d %%' % (
-    100 * correct / total))
+runtime = time.time() - start
+with open('runtime.txt', 'w') as f:
+    f.write(str(runtime))
+#print('Accuracy of the network on the 10000 test images: %d %%' % (
+#    100 * correct / total))
