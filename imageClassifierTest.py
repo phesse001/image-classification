@@ -5,14 +5,14 @@ import torchvision.transforms as transforms
 import torch.nn as nn
 import torch.nn.functional as F
 import time
-from absl import flags
-import sys
+import argparse
 
-FLAGS = flags.FLAGS
-FLAGS(sys.argv)
+parser = argparse.ArgumentParser(description="")
+parser.add_argument('--num_threads', action='store', dest='num_threads', type=int, default=1)
+args = parser.parse_args()
 
-flags.DEFINE_integer("num_threads", 1, "Number of threads to use.")
-torch.set_num_threads(FLAGS.num_threads)
+torch.set_num_threads(args.num_threads)
+print("Number of threads " + str(torch.get_num_threads()))
 
 PATH = './cifar_net.pth'
 
@@ -31,7 +31,7 @@ testset = torchvision.datasets.CIFAR10(root='./data', train=False,
                                            download=True, transform=transform)
 
 testloader = torch.utils.data.DataLoader(testset, batch_size=4,
-                                             shuffle=False, num_workers=2)
+                                             shuffle=False, num_workers=args.num_threads)
 
 # test on testset
 correct = 0
@@ -52,7 +52,7 @@ with torch.no_grad():
 
 runtime = time.time() - start
 with open('results.txt', 'a') as f:
-    point = FLAGS.num_threads + ',' + str(runtime) + '\n'
+    point = str(args.num_threads) + ',' + str(runtime) + '\n'
     f.write(point)
 #print('Accuracy of the network on the 10000 test images: %d %%' % (
 #    100 * correct / total))
