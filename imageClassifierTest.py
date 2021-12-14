@@ -6,8 +6,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 import time
 from absl import flags
+import sys
 
 FLAGS = flags.FLAGS
+FLAGS(sys.argv)
 
 flags.DEFINE_integer("num_threads", 1, "Number of threads to use.")
 torch.set_num_threads(FLAGS.num_threads)
